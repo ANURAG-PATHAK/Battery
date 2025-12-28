@@ -2,7 +2,48 @@
 
 ## Overview
 
-This repository hosts a TypeScript + Express service that ingests EV telemetry, persists data in SQLite, and surfaces actionable vehicle insights.
+This repository hosts a TypeScript + Express service that ingests EV telemetry, evaluates battery health using transparent rules, and returns actionable insights. It is designed for demos and light integrations that need a small, explainable backend rather than a full fleet platform.
+
+### What problem this solves
+
+- Consolidates raw EV telemetry into a single SQLite-backed source of truth for health scoring and alerts.
+- Produces human-readable tips for drivers and operators, reducing the effort to interpret SOC trends, idle drain, or rapid drop events.
+- Provides deterministic simulations so teams can demo and regress scenarios without live vehicles.
+
+### Smartcar integration (for ingestion + simulation parity)
+
+- Uses Smartcar OAuth to pull real or simulated vehicle telemetry (battery, charge, odometer, location) and normalize it into the internal schema.
+- Imported Smartcar snapshots can be processed through the same scoring and alerting pipeline used by the simulation engine, keeping live and simulated data aligned.
+- The Smartcar-facing endpoints were removed from the public API surface; Smartcar is now consumed only by internal scripts (e.g., `npm run smartcar:import`) and can be swapped for other providers later.
+
+### Architecture at a glance
+
+```mermaid
+flowchart TD
+  subgraph Clients
+    API[API consumers]
+    SimCLI[Simulation CLI]
+    Importer[Smartcar importer]
+  end
+
+  API -->|HTTP /api/v1| App[Express App]
+  SimCLI -->|simulate service call| App
+  Importer -->|Smartcar OAuth + fetch| Smartcar[(Smartcar SDK)]
+
+  App -->|controllers| Ctl[Controllers]
+  Ctl -->|validate & orchestrate| Svc[Services]
+  Svc -->|rules eval| Rules[Rules Config]
+  Svc -->|persist/fetch| DB[(SQLite)]
+  Importer -->|normalized telemetry| DB
+  Smartcar -->|telemetry payloads| Importer
+
+  subgraph Core Layers
+    Ctl
+    Svc
+    Rules
+    DB
+  end
+```
 
 ## Runtime Requirements
 
