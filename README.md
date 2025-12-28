@@ -63,7 +63,6 @@ flowchart TD
 4. Launch the development server: `npm run dev` (watches for changes with hot reload).
 5. In a separate terminal, send a telemetry payload (see API Usage) to confirm end-to-end flow.
 
-> Tip: keep the SQLite file under `data/` so migrations and the docker-compose volume share the same location.
 
 ## Environment Configuration
 
@@ -203,8 +202,6 @@ When `persist` is true, the returned `alerts`, `tips`, and final `score` reflect
 
 ## Documentation Assets
 
-- Rules and scoring details: [docs/Rules.md](docs/Rules.md)
-- Demo walkthrough: [docs/DemoScript.md](docs/DemoScript.md)
 - OpenAPI contract: [docs/openapi.yaml](docs/openapi.yaml)
 - Postman collection: [docs/postman_collection.json](docs/postman_collection.json)
 
@@ -225,23 +222,3 @@ The service stores data in a SQLite database located at data/battery.sqlite by d
   - `GET /health` returns a minimal liveness payload.
   - `GET /ready` returns readiness details or `503` with structured error codes when dependencies are unavailable.
 
-## Container Usage
-
-Build and run the service using the provided Docker assets:
-
-```bash
-docker build -t battery-service .
-docker run --rm -p 3000:3000 \
-  -e API_KEY=demo-api-key \
-  -e DATABASE_PATH=/data/battery.sqlite \
-  -v $(pwd)/data:/data \
-  battery-service
-```
-
-For local orchestration with SQLite persistence, use `docker compose up` (see [docker-compose.yml](docker-compose.yml)).
-
-## Future Work
-
-- Migrate persistence to PostgreSQL for concurrency at scale.
-- Expose historical telemetry timelines with pagination.
-- Ship dashboard visualizations and CI/CD automation for demo environments.
