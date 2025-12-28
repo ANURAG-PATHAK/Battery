@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "strict": true,
+    "noImplicitOverride": true,
+    "incremental": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@controllers/*": ["controllers/*"],
+      "@services/*": ["services/*"],
+      "@models/*": ["models/*"],
+      "@rules/*": ["rules/*"],
+      "@db/*": ["db/*"],
+      "@middleware/*": ["middleware/*"],
+      "@utils/*": ["utils/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

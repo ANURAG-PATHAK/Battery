@@ -1,0 +1,14 @@
+/node_modules
+/dist
+plan.md
+.env
+.DS_Store
+.vscode/
+.idea/
+*.log
+coverage/
+*.tmp
+*.bak
+*.swp
+tasks.md
+/.github
