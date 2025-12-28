@@ -2,6 +2,7 @@ import dotenvFlow from 'dotenv-flow';
 import type { Server } from 'http';
 
 import { createApp } from './app';
+import { closeDatabase, runMigrations } from './db/sqlite';
 import { logger } from './utils/logger';
 
 dotenvFlow.config();
@@ -11,6 +12,7 @@ const app = createApp();
 let server: Server | undefined;
 
 const start = async (): Promise<void> => {
+  await runMigrations();
   server = app.listen(port, () => {
     logger.info({ port }, 'server listening');
   });
@@ -35,12 +37,19 @@ const shutdown = async (signal: NodeJS.Signals): Promise<void> => {
     });
   });
 
+  await closeDatabase().catch((error) => {
+    logger.error({ error }, 'failed to close sqlite connection');
+  });
+
   logger.info('shutdown complete');
   process.exit(0);
 };
 
-start().catch((error) => {
+start().catch(async (error) => {
   logger.error({ error }, 'failed to start server');
+  await closeDatabase().catch((closeError) => {
+    logger.error({ error: closeError }, 'error closing sqlite during startup failure');
+  });
   process.exit(1);
 });
 
