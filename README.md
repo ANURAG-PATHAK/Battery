@@ -41,7 +41,7 @@ All configuration is driven through environment variables loaded via `.env`. Ref
 | `SMARTCAR_CLIENT_ID` | Smartcar application client identifier used during OAuth. | _(required)_ | Copy from the Smartcar dashboard (demo or staging tenant). |
 | `SMARTCAR_CLIENT_SECRET` | Smartcar application secret. | _(required)_ | Copy from the Smartcar dashboard; never commit this value. |
 | `SMARTCAR_REDIRECT_URI` | OAuth redirect URI accepted by your Smartcar app. | _(required)_ | Use `http://localhost:3000/api/v1/smartcar/callback` for local demos. |
-| `SMARTCAR_SCOPES` | Comma-separated Smartcar scopes requested during OAuth. | `read_vehicle_info,read_battery,read_charge,read_odometer,read_location` | Adjust when adding new Smartcar capabilities. |
+| `SMARTCAR_SCOPES` | Comma-separated Smartcar scopes requested during OAuth. | `read_vehicle_info,read_battery,read_charge,read_odometer,read_location` | Adjust when adding new Smartcar capabilities and re-run Smartcar Connect to grant them. |
 | `SMARTCAR_MODE` | Smartcar environment (`test` or `live`). | `test` | Switch to `live` when connecting production vehicles. |
 | `SMARTCAR_FORCE_PROMPT` | Forces Smartcar Connect to prompt for approval each visit. | `true` | Set to `false` when reusing existing approvals without user interaction. |
 

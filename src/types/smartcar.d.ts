@@ -22,7 +22,9 @@ declare module 'smartcar' {
     refreshToken: string;
     expiresIn: number;
     refreshTokenExpiresIn: number;
-    scope: SmartcarScope[];
+    scope?: SmartcarScope[] | string;
+    scopes?: SmartcarScope[] | string;
+    permissions?: SmartcarScope[] | string;
   }
 
   export interface VehiclesResponse {
@@ -43,7 +45,6 @@ declare module 'smartcar' {
 
   export interface BatteryResponse {
     percentRemaining: number | null;
-    rangeRemainingMeter?: number | null;
   }
 
   export interface ChargeResponse {
@@ -60,9 +61,12 @@ declare module 'smartcar' {
   export interface OdometerResponse {
     distance: number;
   }
-
-  export interface EngineResponse {
-    isRunning: boolean;
+  export interface SmartcarUser {
+    id: string;
+    meta?: {
+      requestId?: string;
+      [key: string]: unknown;
+    };
   }
 
   export class AuthClient {
@@ -79,9 +83,8 @@ declare module 'smartcar' {
     charge(): Promise<ChargeResponse>;
     location(): Promise<LocationResponse>;
     odometer(): Promise<OdometerResponse>;
-    engine(): Promise<EngineResponse>;
   }
 
   export function getVehicles(token: string): Promise<VehiclesResponse>;
-  export function getUserId(token: string): Promise<string>;
+  export function getUser(token: string): Promise<SmartcarUser>;
 }

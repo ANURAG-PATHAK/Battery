@@ -202,6 +202,13 @@ export const recordTelemetry = async (
   const alerts = buildAlertsFromImpacts(evaluation.ruleImpacts);
   const tips = buildDriverTipsFromImpacts(evaluation.ruleImpacts);
 
+  await upsertVehicle({
+    vehicleId: telemetry.vehicleId,
+    lastSeenAt: telemetry.snapshotTimestamp,
+    lastHealthScore: evaluation.score,
+    metadata: null,
+  });
+
   await insertSnapshot({
     vehicleId: telemetry.vehicleId,
     snapshotTimestamp: telemetry.snapshotTimestamp,
@@ -211,13 +218,6 @@ export const recordTelemetry = async (
     charging: telemetry.charging,
     ambientTemperature: telemetry.ambientTemperature,
     odometerKm: telemetry.odometerKm,
-  });
-
-  await upsertVehicle({
-    vehicleId: telemetry.vehicleId,
-    lastSeenAt: telemetry.snapshotTimestamp,
-    lastHealthScore: evaluation.score,
-    metadata: null,
   });
 
   await insertInsightLog({

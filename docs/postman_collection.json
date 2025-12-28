@@ -12,11 +12,19 @@
     },
     {
       "key": "apiKey",
-      "value": "demo-api-key"
+      "value": "16a3d13d2d3fccc5ac973adeb056df07485ed9dd915a3efa40c45e9757ca1f1f"
     },
     {
       "key": "vehicleId",
       "value": "demo-vehicle"
+    },
+    {
+      "key": "smartcarUserId",
+      "value": "ec2f0e46-c4e3-40e7-b853-1d3f4935b419"
+    },
+    {
+      "key": "smartcarVehicleId",
+      "value": "9a6d4496-b7b4-4fa3-b08b-0bdf410cba8e"
     }
   ],
   "item": [
@@ -163,6 +171,218 @@
           ]
         }
       }
+    },
+    {
+      "name": "Smartcar",
+      "item": [
+        {
+          "name": "Smartcar Connect URL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/smartcar/connect",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "smartcar",
+                "connect"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Smartcar Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/smartcar/vehicles?userId={{smartcarUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "smartcar",
+                "vehicles"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{smartcarUserId}}",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Smartcar Vehicle Battery",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/smartcar/vehicles/{{smartcarVehicleId}}/battery?userId={{smartcarUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "smartcar",
+                "vehicles",
+                "{{smartcarVehicleId}}",
+                "battery"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{smartcarUserId}}",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Smartcar Vehicle Charge",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/smartcar/vehicles/{{smartcarVehicleId}}/charge?userId={{smartcarUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "smartcar",
+                "vehicles",
+                "{{smartcarVehicleId}}",
+                "charge"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{smartcarUserId}}",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Smartcar Vehicle Location",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/smartcar/vehicles/{{smartcarVehicleId}}/location?userId={{smartcarUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "smartcar",
+                "vehicles",
+                "{{smartcarVehicleId}}",
+                "location"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{smartcarUserId}}",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Smartcar Vehicle Odometer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/smartcar/vehicles/{{smartcarVehicleId}}/odometer?userId={{smartcarUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "smartcar",
+                "vehicles",
+                "{{smartcarVehicleId}}",
+                "odometer"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{smartcarUserId}}",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Smartcar Vehicle Insights",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/vehicles/{{smartcarVehicleId}}/insights",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "vehicles",
+                "{{smartcarVehicleId}}",
+                "insights"
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }

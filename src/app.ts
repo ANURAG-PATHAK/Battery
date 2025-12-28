@@ -9,7 +9,6 @@ import { errorHandler } from './middleware/errorHandler.middleware';
 import { telemetryRouter } from './controllers/telemetry.controller';
 import { insightsRouter } from './controllers/insights.controller';
 import { simulationRouter } from './controllers/simulation.controller';
-import { smartcarPublicRouter, smartcarRouter } from './controllers/smartcar.controller';
 import { getAppConfig } from './config/appConfig';
 import { logger } from './utils/logger';
 import { getMigrationStatus, getDatabaseHealth } from './db/sqlite';
@@ -131,14 +130,11 @@ export const createApp = (): Application => {
     }
   });
 
-  app.use('/api/v1/smartcar', smartcarPublicRouter);
-
   const apiRouter = Router();
   apiRouter.use(apiKeyMiddleware);
   apiRouter.use('/telemetry', telemetryRouter);
   apiRouter.use('/vehicles', insightsRouter);
   apiRouter.use('/simulate', simulationRouter);
-  apiRouter.use('/smartcar', smartcarRouter);
 
   app.use('/api/v1', apiRouter);
 
