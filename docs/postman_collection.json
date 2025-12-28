@@ -1,0 +1,168 @@
+{
+  "info": {
+    "name": "EV Battery Insight Service",
+    "_postman_id": "7f4e79af-7b1d-4e1a-b3f1-7e25f26af3bf",
+    "description": "Collection covering ingestion, insights, simulations, and operational probes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "apiKey",
+      "value": "demo-api-key"
+    },
+    {
+      "key": "vehicleId",
+      "value": "demo-vehicle"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Readiness",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/ready",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Ingest Telemetry",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vehicleId\": \"{{vehicleId}}\",\n  \"timestamp\": \"2024-01-01T08:00:00.000Z\",\n  \"batteryPercentage\": 82,\n  \"speedKmph\": 22,\n  \"engineOn\": true,\n  \"charging\": false\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/telemetry",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "telemetry"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vehicle Insights",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/vehicles/{{vehicleId}}/insights",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "vehicles",
+            "{{vehicleId}}",
+            "insights"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List Simulation Scenarios",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/simulate/scenarios",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "simulate",
+            "scenarios"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Run Simulation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"scenario\": \"mixed\",\n  \"persist\": true,\n  \"vehicleId\": \"{{vehicleId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/simulate/drive",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "simulate",
+            "drive"
+          ]
+        }
+      }
+    }
+  ]
+}

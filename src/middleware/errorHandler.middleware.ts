@@ -4,11 +4,13 @@ import { ZodError } from 'zod';
 import { badRequestError, HttpError } from '../utils/errors';
 import { logger } from '../utils/logger';
 
-export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
+export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   if (res.headersSent) {
     next(error);
     return;
   }
+
+  const requestId = (req as { id?: string }).id;
 
   if (error instanceof ZodError) {
     const validationError = badRequestError('Request validation failed', error.flatten());
@@ -17,6 +19,7 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
         code: validationError.code,
         message: validationError.message,
         details: validationError.details,
+        requestId,
       },
     });
     return;
@@ -28,6 +31,7 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
         code: error.code,
         message: error.message,
         details: error.details,
+        requestId,
       },
     });
     return;
@@ -38,6 +42,7 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
     error: {
       code: 'INTERNAL_SERVER_ERROR',
       message: 'Something went wrong. Try again later.',
+      requestId,
     },
   });
 };

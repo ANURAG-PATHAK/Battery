@@ -1,0 +1,639 @@
+openapi: 3.1.0
+info:
+  title: EV Battery Insight Service API
+  version: '1.0.0'
+  description: |
+    REST interface for ingesting EV telemetry, retrieving insights, and running deterministic simulations.
+servers:
+  - url: http://localhost:3000
+    description: Local development
+security:
+  - ApiKeyAuth: []
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error constant.
+            message:
+              type: string
+              description: Summary of the failure.
+            details:
+              description: Optional structured metadata for debugging.
+            requestId:
+              type: string
+              nullable: true
+              description: Correlation identifier echoed from the request.
+    Alert:
+      type: object
+      required:
+        - title
+        - message
+        - severity
+      properties:
+        title:
+          type: string
+        message:
+          type: string
+        severity:
+          type: string
+          enum: [info, warning, critical]
+    DriverTip:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    RuleImpact:
+      type: object
+      required:
+        - id
+        - deduction
+      properties:
+        id:
+          type: string
+          description: Stable rule identifier.
+        deduction:
+          type: number
+          format: float
+          description: Points removed from the base score.
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Context that informed the rule decision.
+    NormalizedTelemetry:
+      type: object
+      required:
+        - vehicleId
+        - snapshotTimestamp
+        - batteryPercentage
+        - speedKmph
+        - engineOn
+        - charging
+        - rawTimestamp
+      properties:
+        vehicleId:
+          type: string
+        snapshotTimestamp:
+          type: string
+          format: date-time
+        rawTimestamp:
+          type: string
+          format: date-time
+        batteryPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+        speedKmph:
+          type: number
+          minimum: 0
+        engineOn:
+          type: boolean
+        charging:
+          type: boolean
+        ambientTemperature:
+          type: number
+          nullable: true
+        odometerKm:
+          type: number
+          nullable: true
+    TelemetryIngestRequest:
+      type: object
+      required:
+        - vehicleId
+        - timestamp
+        - batteryPercentage
+        - speedKmph
+        - engineOn
+        - charging
+      properties:
+        vehicleId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        batteryPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+        speedKmph:
+          type: number
+          minimum: 0
+        engineOn:
+          type: boolean
+        charging:
+          type: boolean
+        ambientTemperature:
+          type: number
+          description: Degrees Celsius.
+        odometerKm:
+          type: number
+    BatteryEvaluation:
+      type: object
+      required:
+        - baseScore
+        - score
+        - status
+        - ruleImpacts
+      properties:
+        baseScore:
+          type: number
+        score:
+          type: number
+        status:
+          type: string
+          enum: [GOOD, MODERATE, POOR]
+        ruleImpacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleImpact'
+    TelemetryIngestResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - vehicleId
+            - score
+            - status
+            - baseScore
+            - alerts
+            - tips
+            - ruleImpacts
+            - telemetry
+          properties:
+            vehicleId:
+              type: string
+            score:
+              type: number
+            status:
+              type: string
+              enum: [GOOD, MODERATE, POOR]
+            baseScore:
+              type: number
+            alerts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Alert'
+            tips:
+              type: array
+              items:
+                $ref: '#/components/schemas/DriverTip'
+            ruleImpacts:
+              type: array
+              items:
+                $ref: '#/components/schemas/RuleImpact'
+            telemetry:
+              $ref: '#/components/schemas/NormalizedTelemetry'
+    InsightHistoryEntry:
+      type: object
+      required:
+        - id
+        - createdAt
+        - healthScore
+        - status
+        - alerts
+        - tips
+      properties:
+        id:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        healthScore:
+          type: number
+        status:
+          type: string
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+        tips:
+          type: array
+          items:
+            $ref: '#/components/schemas/DriverTip'
+    VehicleInsights:
+      type: object
+      required:
+        - vehicleId
+        - score
+        - status
+        - telemetry
+        - evaluation
+        - alerts
+        - tips
+        - history
+        - lastSeenAt
+      properties:
+        vehicleId:
+          type: string
+        score:
+          type: number
+        status:
+          type: string
+          enum: [GOOD, MODERATE, POOR]
+        telemetry:
+          $ref: '#/components/schemas/NormalizedTelemetry'
+        evaluation:
+          $ref: '#/components/schemas/BatteryEvaluation'
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+        tips:
+          type: array
+          items:
+            $ref: '#/components/schemas/DriverTip'
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/InsightHistoryEntry'
+        lastSeenAt:
+          type: string
+          format: date-time
+    VehicleInsightsResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/VehicleInsights'
+    SimulationScenario:
+      type: object
+      required:
+        - name
+        - description
+        - samples
+      properties:
+        name:
+          type: string
+          enum: [urban, highway, mixed]
+        description:
+          type: string
+        samples:
+          type: array
+          items:
+            type: object
+            required:
+              - minuteOffset
+              - batteryPercentage
+              - speedKmph
+              - engineOn
+              - charging
+              - ambientTemperature
+              - odometerKm
+            properties:
+              minuteOffset:
+                type: number
+              batteryPercentage:
+                type: number
+              speedKmph:
+                type: number
+              engineOn:
+                type: boolean
+              charging:
+                type: boolean
+              ambientTemperature:
+                type: number
+              odometerKm:
+                type: number
+    SimulationScenariosResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimulationScenario'
+    SimulationDriveRequest:
+      type: object
+      required:
+        - scenario
+      properties:
+        scenario:
+          type: string
+          enum: [urban, highway, mixed]
+        vehicleId:
+          type: string
+          description: Overrides the default simulation vehicle id.
+        persist:
+          type: boolean
+          description: When true, each sample is persisted through the ingestion pipeline.
+        baseTimestamp:
+          type: string
+          format: date-time
+          description: Base timestamp for the first sample in the scenario.
+    SimulationDriveResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - vehicleId
+            - scenario
+            - persisted
+            - samples
+            - before
+            - after
+            - alerts
+            - tips
+          properties:
+            vehicleId:
+              type: string
+            scenario:
+              $ref: '#/components/schemas/SimulationScenario'
+            persisted:
+              type: boolean
+            samples:
+              type: array
+              items:
+                $ref: '#/components/schemas/NormalizedTelemetry'
+            before:
+              type: object
+              required:
+                - batteryPercentage
+                - snapshotTimestamp
+              properties:
+                batteryPercentage:
+                  type: number
+                snapshotTimestamp:
+                  type: string
+                  format: date-time
+            after:
+              type: object
+              required:
+                - batteryPercentage
+                - snapshotTimestamp
+                - score
+                - status
+              properties:
+                batteryPercentage:
+                  type: number
+                snapshotTimestamp:
+                  type: string
+                  format: date-time
+                score:
+                  type: number
+                status:
+                  type: string
+                  enum: [GOOD, MODERATE, POOR]
+            alerts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Alert'
+            tips:
+              type: array
+              items:
+                $ref: '#/components/schemas/DriverTip'
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+    ReadyResponse:
+      type: object
+      required:
+        - status
+        - details
+      properties:
+        status:
+          type: string
+          enum: [ready]
+        details:
+          type: object
+          required:
+            - database
+            - appliedMigrations
+          properties:
+            database:
+              type: object
+              properties:
+                connected:
+                  type: boolean
+                path:
+                  type: string
+                lastMigration:
+                  type: string
+                  nullable: true
+              required:
+                - connected
+                - path
+            appliedMigrations:
+              type: array
+              items:
+                type: string
+        requestId:
+          type: string
+          nullable: true
+paths:
+  /health:
+    get:
+      summary: Liveness probe
+      tags: [Operations]
+      responses:
+        '200':
+          description: Service is running.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /ready:
+    get:
+      summary: Readiness probe
+      tags: [Operations]
+      responses:
+        '200':
+          description: Service is ready to receive traffic.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadyResponse'
+        '503':
+          description: Service dependencies are not ready.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/telemetry:
+    post:
+      summary: Ingest telemetry snapshot
+      tags: [Telemetry]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelemetryIngestRequest'
+      responses:
+        '201':
+          description: Snapshot accepted and scored.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryIngestResponse'
+        '400':
+          description: Validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/vehicles/{vehicleId}/insights:
+    get:
+      summary: Retrieve latest vehicle insight
+      tags: [Insights]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: vehicleId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Insight payload for the requested vehicle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleInsightsResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Vehicle or telemetry not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/simulate/scenarios:
+    get:
+      summary: List available simulation scenarios
+      tags: [Simulation]
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Enumeration of built-in scenarios.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationScenariosResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/simulate/drive:
+    post:
+      summary: Execute a deterministic drive scenario
+      tags: [Simulation]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulationDriveRequest'
+      responses:
+        '201':
+          description: Simulation run completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationDriveResponse'
+        '400':
+          description: Validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

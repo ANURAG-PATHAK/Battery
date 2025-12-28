@@ -8,6 +8,8 @@ import { logger } from '../utils/logger';
 sqlite3.verbose();
 
 const DEFAULT_DB_PATH = path.resolve(process.cwd(), 'data', 'battery.sqlite');
+const resolveMigrationsDirectory = (migrationsDir?: string): string =>
+  migrationsDir || path.resolve(process.cwd(), 'migrations');
 
 let db: sqlite3.Database | null = null;
 
@@ -152,7 +154,7 @@ export const runMigrations = async (migrationsDir?: string): Promise<void> => {
   const database = await getDatabase();
   await ensureMigrationsTable(database);
 
-  const directory = migrationsDir || path.resolve(process.cwd(), 'migrations');
+  const directory = resolveMigrationsDirectory(migrationsDir);
   if (!fs.existsSync(directory)) {
     logger.warn({ directory }, 'no migrations directory found, skipping');
     return;
@@ -183,3 +185,66 @@ export const runMigrations = async (migrationsDir?: string): Promise<void> => {
 };
 
 export const getDatabasePath = (): string => resolveDatabasePath();
+
+export type DatabaseHealth = {
+  connected: boolean;
+  path: string;
+  lastMigration?: string | null;
+  error?: string;
+};
+
+export const getDatabaseHealth = async (): Promise<DatabaseHealth> => {
+  const database = await getDatabase();
+  try {
+    await ensureMigrationsTable(database);
+    type Row = { name: string | null };
+    const rows = await all<Row>(
+      database,
+      'SELECT name FROM migrations ORDER BY applied_at DESC LIMIT 1;',
+    );
+    const lastMigration = rows[0]?.name ?? null;
+    return {
+      connected: true,
+      path: getDatabasePath(),
+      lastMigration,
+    };
+  } catch (error) {
+    logger.error({ error }, 'database health check failed');
+    return {
+      connected: false,
+      path: getDatabasePath(),
+      error: error instanceof Error ? error.message : 'unknown error',
+    };
+  }
+};
+
+export type MigrationStatus = {
+  applied: string[];
+  pending: string[];
+};
+
+export const getMigrationStatus = async (
+  migrationsDir?: string,
+): Promise<MigrationStatus> => {
+  const database = await getDatabase();
+  await ensureMigrationsTable(database);
+
+  const appliedSet = await listAppliedMigrations(database);
+  const applied = Array.from(appliedSet.values()).sort();
+
+  const directory = resolveMigrationsDirectory(migrationsDir);
+  if (!fs.existsSync(directory)) {
+    return { applied, pending: [] };
+  }
+
+  const files = fs
+    .readdirSync(directory)
+    .filter((file) => file.endsWith('.sql') && !file.endsWith('.down.sql'))
+    .sort();
+
+  const pending = files
+    .map((file) => file.replace(/\.sql$/, ''))
+    .filter((name) => !appliedSet.has(name));
+
+  return { applied, pending };
+};
