@@ -406,6 +406,221 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/DriverTip'
+    SmartcarVehicle:
+      type: object
+      required:
+        - id
+        - make
+        - model
+        - year
+      properties:
+        id:
+          type: string
+        make:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+    SmartcarConnectResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - url
+            - scope
+          properties:
+            url:
+              type: string
+              format: uri
+            scope:
+              type: array
+              items:
+                type: string
+    SmartcarCallbackResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - userId
+            - scope
+            - expiresAt
+            - vehicles
+          properties:
+            userId:
+              type: string
+            scope:
+              type: array
+              items:
+                type: string
+            expiresAt:
+              type: string
+              format: date-time
+            refreshExpiresAt:
+              type: string
+              format: date-time
+              nullable: true
+            vehicles:
+              type: array
+              items:
+                $ref: '#/components/schemas/SmartcarVehicle'
+            state:
+              type: string
+              nullable: true
+    SmartcarVehiclesResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - vehicles
+          properties:
+            vehicles:
+              type: array
+              items:
+                $ref: '#/components/schemas/SmartcarVehicle'
+    SmartcarBatteryData:
+      type: object
+      properties:
+        percentRemaining:
+          type: number
+          nullable: true
+        rangeRemainingMeter:
+          type: number
+          nullable: true
+    SmartcarChargeData:
+      type: object
+      properties:
+        isPluggedIn:
+          type: boolean
+        state:
+          type: string
+    SmartcarOdometerData:
+      type: object
+      properties:
+        distance:
+          type: number
+          nullable: true
+    SmartcarEngineData:
+      type: object
+      properties:
+        isRunning:
+          type: boolean
+    SmartcarLocationData:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        time:
+          type: string
+          format: date-time
+    SmartcarVehicleDataResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - vehicleId
+          properties:
+            vehicleId:
+              type: string
+            battery:
+              $ref: '#/components/schemas/SmartcarBatteryData'
+            charge:
+              $ref: '#/components/schemas/SmartcarChargeData'
+            odometer:
+              $ref: '#/components/schemas/SmartcarOdometerData'
+            engine:
+              $ref: '#/components/schemas/SmartcarEngineData'
+            location:
+              $ref: '#/components/schemas/SmartcarLocationData'
+    SmartcarVehicleBatteryResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - vehicleId
+            - battery
+          properties:
+            vehicleId:
+              type: string
+            battery:
+              $ref: '#/components/schemas/SmartcarBatteryData'
+    SmartcarVehicleChargeResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - vehicleId
+            - charge
+          properties:
+            vehicleId:
+              type: string
+            charge:
+              $ref: '#/components/schemas/SmartcarChargeData'
+    SmartcarVehicleOdometerResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - vehicleId
+            - odometer
+          properties:
+            vehicleId:
+              type: string
+            odometer:
+              $ref: '#/components/schemas/SmartcarOdometerData'
+    SmartcarVehicleEngineResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - vehicleId
+            - engine
+          properties:
+            vehicleId:
+              type: string
+            engine:
+              $ref: '#/components/schemas/SmartcarEngineData'
+    SmartcarVehicleLocationResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - vehicleId
+            - location
+          properties:
+            vehicleId:
+              type: string
+            location:
+              $ref: '#/components/schemas/SmartcarLocationData'
     HealthResponse:
       type: object
       required:
@@ -619,6 +834,317 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/smartcar/connect:
+    get:
+      summary: Generate Smartcar Connect URL
+      description: Returns a Smartcar Connect authorization URL along with the scopes that will be requested.
+      tags: [Smartcar]
+      parameters:
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional opaque value echoed back during the OAuth callback.
+      responses:
+        '200':
+          description: Connect URL generated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartcarConnectResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/smartcar/callback:
+    get:
+      summary: Handle Smartcar OAuth callback
+      description: Exchanges the Smartcar authorization code for tokens, persists them, and returns connected vehicle metadata.
+      tags: [Smartcar]
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Authorization code returned by Smartcar Connect.
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional state parameter echoed from the original Connect request.
+      responses:
+        '200':
+          description: Smartcar user linked successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartcarCallbackResponse'
+        '400':
+          description: Missing required authorization code or invalid payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/smartcar/vehicles:
+    get:
+      summary: List Smartcar vehicles
+      tags: [Smartcar]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Specify a Smartcar user id when multiple connections are stored.
+      responses:
+        '200':
+          description: Vehicles linked to the Smartcar user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartcarVehiclesResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/smartcar/vehicles/{vehicleId}/battery:
+    get:
+      summary: Retrieve Smartcar battery data
+      tags: [Smartcar]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: vehicleId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Specify a Smartcar user id when multiple connections are stored.
+      responses:
+        '200':
+          description: Battery state for the vehicle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartcarVehicleBatteryResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/smartcar/vehicles/{vehicleId}/charge:
+    get:
+      summary: Retrieve Smartcar charge status
+      tags: [Smartcar]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: vehicleId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Charging status for the vehicle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartcarVehicleChargeResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/smartcar/vehicles/{vehicleId}/odometer:
+    get:
+      summary: Retrieve Smartcar odometer reading
+      tags: [Smartcar]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: vehicleId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Odometer reading for the vehicle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartcarVehicleOdometerResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/smartcar/vehicles/{vehicleId}/engine:
+    get:
+      summary: Retrieve Smartcar engine status
+      tags: [Smartcar]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: vehicleId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Engine state for the vehicle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartcarVehicleEngineResponse'
+        '401':
+          description: Missing or invalid API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/smartcar/vehicles/{vehicleId}/location:
+    get:
+      summary: Retrieve Smartcar location
+      tags: [Smartcar]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: vehicleId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Last reported vehicle location.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartcarVehicleLocationResponse'
         '401':
           description: Missing or invalid API key.
           content:

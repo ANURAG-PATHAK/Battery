@@ -84,4 +84,15 @@ time rm -f data/battery.sqlite
 npm run db:migrate
 ```
 
+## 5. Smartcar Integration (Optional)
+
+Showcase the official Smartcar OAuth handshake and live vehicle data:
+
+1. Populate `.env` with `SMARTCAR_CLIENT_ID`, `SMARTCAR_CLIENT_SECRET`, and `SMARTCAR_REDIRECT_URI` (use the local callback URL for demos).
+2. Request a Connect URL: `curl http://localhost:3000/api/v1/smartcar/connect` and open the returned `data.url` in a browser.
+3. Approve the Smartcar consent screen. The browser redirects to `/api/v1/smartcar/callback`, which returns the Smartcar `userId`, scope list, and discovered vehicles while persisting tokens to SQLite.
+4. Pull telemetry: `npm run smartcar:import -- --dry-run` to preview normalized snapshots, then rerun without `--dry-run` to persist through the ingestion pipeline.
+5. Demonstrate live data via API: `curl -H "x-api-key: ${API_KEY}" http://localhost:3000/api/v1/smartcar/vehicles/${VEHICLE_ID}/battery` (and the matching `charge`, `odometer`, `engine`, `location` routes).
+6. Query insights for the Smartcar vehicle ID to tie external telemetry back to scoring and alerting.
+
 This ensures subsequent runs start from an empty state while keeping migrations consistent.

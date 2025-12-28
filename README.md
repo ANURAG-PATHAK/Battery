@@ -38,6 +38,12 @@ All configuration is driven through environment variables loaded via `.env`. Ref
 | `RATE_LIMIT_WINDOW_MS` | Duration of the rate-limiter window in milliseconds. | `60000` | Tune for higher/lower request throughput based on deployment needs. |
 | `RATE_LIMIT_MAX` | Maximum requests allowed per IP within the window. | `120` | Increase for trusted internal callers or tighten for public-facing deployments. |
 | `REQUEST_ID_HEADER` | Correlation ID header propagated through logs and responses. | `x-request-id` | Align with upstream gateways that already stamp request identifiers. |
+| `SMARTCAR_CLIENT_ID` | Smartcar application client identifier used during OAuth. | _(required)_ | Copy from the Smartcar dashboard (demo or staging tenant). |
+| `SMARTCAR_CLIENT_SECRET` | Smartcar application secret. | _(required)_ | Copy from the Smartcar dashboard; never commit this value. |
+| `SMARTCAR_REDIRECT_URI` | OAuth redirect URI accepted by your Smartcar app. | _(required)_ | Use `http://localhost:3000/api/v1/smartcar/callback` for local demos. |
+| `SMARTCAR_SCOPES` | Comma-separated Smartcar scopes requested during OAuth. | `read_vehicle_info,read_battery,read_charge,read_odometer,read_location` | Adjust when adding new Smartcar capabilities. |
+| `SMARTCAR_MODE` | Smartcar environment (`test` or `live`). | `test` | Switch to `live` when connecting production vehicles. |
+| `SMARTCAR_FORCE_PROMPT` | Forces Smartcar Connect to prompt for approval each visit. | `true` | Set to `false` when reusing existing approvals without user interaction. |
 
 After editing `.env`, restart the server so new values take effect.
 
@@ -48,6 +54,17 @@ After editing `.env`, restart the server so new values take effect.
 - **Lint & type-check:** execute `npm run lint` and `npm run build` before committing to ensure code quality.
 - **Reset database:** delete the SQLite file under `data/` then re-run migrations; useful between demo scenarios.
 - **Run CLI simulations:** `npm run simulate -- --scenario=mixed --persist` seeds deterministic data via the service layer.
+
+## End-to-End Local Demo (Smartcar + API)
+
+1. **Create Smartcar credentials:** from the Smartcar developer dashboard (or simulator), note the client ID, secret, and allowed redirect URI.
+2. **Populate `.env`:** set `SMARTCAR_CLIENT_ID`, `SMARTCAR_CLIENT_SECRET`, and `SMARTCAR_REDIRECT_URI` (use `http://localhost:3000/api/v1/smartcar/callback` while running locally). Leave the default scope list unless you added additional permissions in Smartcar.
+3. **Start the service:** run `npm run dev` and confirm the console logs indicate the server is listening.
+4. **Request a Connect URL:** execute `curl http://localhost:3000/api/v1/smartcar/connect` (optionally append `?state=demo`). Copy the `data.url` value from the response and open it in a browser to launch Smartcar Connect.
+5. **Complete OAuth:** log into the Smartcar simulator, approve the requested scopes, and allow the redirect back to the service. The callback responds with JSON summarizing the connected user, token expiry timestamps, and discovered vehicles. Tokens are persisted automatically in SQLite.
+6. **Pull vehicle telemetry:** run `npm run smartcar:import -- --dry-run` to confirm telemetry retrieval, then rerun without `--dry-run` to persist snapshots through the ingestion pipeline. The importer automatically uses the stored Smartcar tokens.
+7. **Inspect insights:** call `curl -H "x-api-key: ${API_KEY}" http://localhost:3000/api/v1/vehicles/<vehicleId>/insights` (replace `<vehicleId>` with an id returned by the callback or importer) to review scoring, alerts, and tips.
+8. **Explore live Smartcar data:** use the `/api/v1/smartcar/vehicles/:vehicleId/...` routes (documented below) to fetch battery, charge, odometer, engine, or location data on demand.
 
 ## API Usage
 
@@ -110,6 +127,73 @@ When `persist` is true, the returned `alerts`, `tips`, and final `score` reflect
 - **CLI automation:** invoke `npm run simulate -- --scenario=urban --persist` to populate data without issuing manual HTTP requests.
 - **Custom timestamps:** pass `baseTimestamp` in the simulation request to shift the generated drive timeline.
 
+## Smartcar Integration
+
+### OAuth handshake
+
+1. `GET /api/v1/smartcar/connect` returns a Connect URL and the exact scopes being requested.
+2. Visiting that URL launches Smartcar Connect; approving access redirects the browser to `/api/v1/smartcar/callback`.
+3. The callback response includes the Smartcar `userId`, scope list, token expiry timestamps, and discovered vehicle metadata. Tokens are persisted in SQLite and refreshed automatically when they near expiration.
+
+Sample `connect` response:
+
+```bash
+curl http://localhost:3000/api/v1/smartcar/connect
+# {
+#   "data": {
+#     "url": "https://connect.smartcar.com/oauth/authorize?...",
+#     "scope": ["read_vehicle_info", "read_battery", ...]
+#   }
+# }
+```
+
+Sample `callback` response (triggered by the browser redirect):
+
+```json
+{
+  "data": {
+    "userId": "smartcar-user-123",
+    "scope": ["read_vehicle_info", "read_battery", "read_charge", "read_odometer", "read_location"],
+    "expiresAt": "2025-01-01T12:34:56.000Z",
+    "refreshExpiresAt": "2025-04-01T12:34:56.000Z",
+    "vehicles": [
+      {
+        "id": "498a9f34-5f3c-4090-a4b4-...",
+        "make": "SMARTCAR",
+        "model": "Simulated",
+        "year": 2024
+      }
+    ]
+  }
+}
+```
+
+### Smartcar API endpoints
+
+All endpoints below require the standard `x-api-key` header. An optional `userId` query parameter lets you target a specific Smartcar connection when multiple users have been linked.
+
+```bash
+# List vehicles for the stored Smartcar user
+curl -H "x-api-key: ${API_KEY}" \
+  http://localhost:3000/api/v1/smartcar/vehicles
+
+# Fetch battery status for a vehicle
+curl -H "x-api-key: ${API_KEY}" \
+  http://localhost:3000/api/v1/smartcar/vehicles/${VEHICLE_ID}/battery
+
+# Retrieve charge state, odometer, engine status, or location similarly
+curl -H "x-api-key: ${API_KEY}" \
+  http://localhost:3000/api/v1/smartcar/vehicles/${VEHICLE_ID}/location
+```
+
+Responses mirror the Smartcar SDK output (for example, `battery.percentRemaining`, `charge.state`, `odometer.distance`, `location.latitude/longitude`).
+
+### CLI importer
+
+- Run `npm run smartcar:import` to pull the latest Smartcar telemetry, convert it to the normalized schema, and optionally persist it.
+- Pass `--vehicleId=<smartcarVehicleId>` to target a specific vehicle or omit it to ingest every vehicle returned by `GET /api/v1/smartcar/vehicles`.
+- Include `--dry-run` to preview normalized payloads without writing to SQLite; each run logs the vehicle id, inferred battery percentage, and score outcomes when persisted.
+
 ## Health, Readiness, and Logging
 
 - `GET /health` verifies the process is alive.
@@ -139,6 +223,14 @@ When `persist` is true, the returned `alerts`, `tips`, and final `score` reflect
 | `GET` | `/api/v1/vehicles/{vehicleId}/insights` | Retrieve latest score, alerts, and tips for a vehicle. |
 | `GET` | `/api/v1/simulate/scenarios` | List deterministic simulation scenarios. |
 | `POST` | `/api/v1/simulate/drive` | Execute a simulated drive; optionally persist telemetry. |
+| `GET` | `/api/v1/smartcar/connect` | Generate Smartcar Connect URL (no API key required). |
+| `GET` | `/api/v1/smartcar/callback` | Handle Smartcar OAuth redirect and persist tokens. |
+| `GET` | `/api/v1/smartcar/vehicles` | List vehicles linked to the stored Smartcar user. |
+| `GET` | `/api/v1/smartcar/vehicles/{vehicleId}/battery` | Retrieve battery state-of-charge and range information. |
+| `GET` | `/api/v1/smartcar/vehicles/{vehicleId}/charge` | Fetch active charging status and plug state. |
+| `GET` | `/api/v1/smartcar/vehicles/{vehicleId}/odometer` | Return odometer readings in kilometers. |
+| `GET` | `/api/v1/smartcar/vehicles/{vehicleId}/engine` | Report whether the engine is currently running. |
+| `GET` | `/api/v1/smartcar/vehicles/{vehicleId}/location` | Provide the latest GPS coordinates (requires location scope). |
 | `GET` | `/health` | Basic liveness probe. |
 | `GET` | `/ready` | Readiness probe that verifies SQLite connectivity and migration state. |
 
