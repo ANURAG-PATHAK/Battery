@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository hosts a TypeScript + Express service that ingests EV telemetry, persists data in SQLite, and surfaces actionable vehicle insights. The implementation roadmap is tracked in [tasks.md](tasks.md) and detailed in [plan.md](plan.md).
+This repository hosts a TypeScript + Express service that ingests EV telemetry, persists data in SQLite, and surfaces actionable vehicle insights.
 
 ## Runtime Requirements
 
