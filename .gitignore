@@ -28,7 +28,7 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/.github/copilot-instructions.md
+/.github
 /.DS_Store
 /.vscode
 /.idea

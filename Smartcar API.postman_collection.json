@@ -1,0 +1,859 @@
+{
+	"info": {
+		"_postman_id": "de596180-4770-4b4c-b128-31679d28e170",
+		"name": "Smartcar API",
+		"description": "# How do I use Postman with Smartcar?\n\nWe've detailed how to get started with Smartcar in Postman [here](https://www.notion.so/smartcarapi/How-do-I-use-Postman-with-Smartcar-b8e8483bae8b43a986715582beb54bd4).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "28445699",
+		"_collection_link": "https://www.postman.com/smartcar/smartcar-api/collection/fqmwehs/smartcar-api?action=share&source=collection_link&creator=28445699"
+	},
+	"item": [
+		{
+			"name": "Make Specific - Tesla",
+			"item": [
+				{
+					"name": "Vehicle Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/status"
+					},
+					"response": []
+				},
+				{
+					"name": "Alerts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/alerts"
+					},
+					"response": []
+				},
+				{
+					"name": "Extended Vehicle Info - Tesla",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/attributes"
+					},
+					"response": []
+				},
+				{
+					"name": "Charge",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge"
+					},
+					"response": []
+				},
+				{
+					"name": "Amperage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge/ammeter"
+					},
+					"response": []
+				},
+				{
+					"name": "Amperage",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge/ammeter"
+					},
+					"response": []
+				},
+				{
+					"name": "Charge Completion Time",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge/completion"
+					},
+					"response": []
+				},
+				{
+					"name": "Charge Records",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge/records"
+					},
+					"response": []
+				},
+				{
+					"name": "Charge Billing Records",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge/records/billing"
+					},
+					"response": []
+				},
+				{
+					"name": "Charge Schedule",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge/schedule"
+					},
+					"response": []
+				},
+				{
+					"name": "Charge Schedule",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge/schedule"
+					},
+					"response": []
+				},
+				{
+					"name": "Wattage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge/wattmeter"
+					},
+					"response": []
+				},
+				{
+					"name": "Voltage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/charge/voltmeter"
+					},
+					"response": []
+				},
+				{
+					"name": "Exterior Temperature",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/thermometer/exterior"
+					},
+					"response": []
+				},
+				{
+					"name": "Interior Temperature",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/thermometer/interior"
+					},
+					"response": []
+				},
+				{
+					"name": "Compass",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/compass"
+					},
+					"response": []
+				},
+				{
+					"name": "Speed",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/speedometer"
+					},
+					"response": []
+				},
+				{
+					"name": "Cabin Climate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/cabin/climate"
+					},
+					"response": []
+				},
+				{
+					"name": "Cabin Climate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "GET https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/climate/cabin"
+					},
+					"response": []
+				},
+				{
+					"name": "Defroster",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/cabin/defroster"
+					},
+					"response": []
+				},
+				{
+					"name": "Defroster",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/climate/defroster"
+					},
+					"response": []
+				},
+				{
+					"name": "Steering Heater",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/climate/steering_wheel"
+					},
+					"response": []
+				},
+				{
+					"name": "Virtual Key Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/virtual_key"
+					},
+					"response": []
+				},
+				{
+					"name": "Steering Heater",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tesla/climate/steering_wheel"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Make Specific - Chevrolet and Cadillac",
+			"item": [
+				{
+					"name": "Voltage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/{{make}}/charge/voltmeter"
+					},
+					"response": []
+				},
+				{
+					"name": "Charge Completion Time",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/{{make}}/charge/completion"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Make Specific - BMW and Mini",
+			"item": [
+				{
+					"name": "Charge Records",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/{{make}}/charge/records"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Make Specific - Ford and Lincoln",
+			"item": [
+				{
+					"name": "Charge Schedule by Location",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/{{make}}/charge/schedule_by_location"
+					},
+					"response": []
+				},
+				{
+					"name": "Charge Schedule by Location",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/{{make}}/charge/schedule_by_location"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Make Specific - Nissan",
+			"item": [
+				{
+					"name": "Charge Schedule",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/nissan/charge/schedule"
+					},
+					"response": []
+				},
+				{
+					"name": "Charge Schedule",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/nissan/charge/schedule"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Connection Management",
+			"item": [
+				{
+					"name": "Vehicle Connections",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"connection": true,
+							"accept-encoding": true,
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "{{Application Management Token}}",
+								"username": "default"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"url": "https://management.smartcar.com/v2.0/management/connections",
+						"description": "Returns a paged list of all vehicles that are connected to the application associated with the management API token used, sorted in descending order by connection date."
+					},
+					"response": []
+				},
+				{
+					"name": "Vehicle Connections",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"password": "{{Application Management Token}}",
+								"username": "default"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://management.smartcar.com/v2.0/management/connections?vehicle_id=",
+							"protocol": "https",
+							"host": [
+								"management",
+								"smartcar",
+								"com"
+							],
+							"path": [
+								"v2.0",
+								"management",
+								"connections"
+							],
+							"query": [
+								{
+									"key": "vehicle_id",
+									"value": ""
+								},
+								{
+									"key": "user_id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Deletes all vehicle connections associated with a Smartcar user ID or a specific vehicle."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "All Vehicles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set('vehicle_id', pm.response.json()[\"vehicles\"][0])"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/",
+				"description": "__Description__\n\nReturns a paged list of all vehicles connected to the application for the current authorized user.\n\n__Query Parameters__\n\n|Parameter| Type|Required|Description|\n|--|--|--|--|\n|`limit`|integer|false|Number of vehicles to return (default: 10).|\n|`offset`|integer|false|A vehicle ID (UUID v4).|Index to start vehicle list at|\n\n__Response Body__\n\n|Name| Type|Desciprtion|\n|--|--|--|\n|`vehicles`|array|An array of vehicle IDs.|\n|`vehicles.[]`|string|A vehicle ID (UUID v4).|\n|`paging`|object|Metadata about the current list of elements.|\n|`paging.count`|integer|The total number of elements for the entire query (not just the given page).|\n|`paging.offset`|integer|The current start index of the returned list of elements.|"
+			},
+			"response": []
+		},
+		{
+			"name": "EV Battery Capacity",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/battery/capacity",
+				"description": "__Description__\n\nReturns the total capacity of an electric vehicle's battery.\n\n__Permission__\n\n`read_battery`\n\n__Response body__\n\n|  Name \t|Type   \t|Boolean   \t|\n|---\t|---\t|---\t|\n|  capacity|   number|  The total capacity of the vehicle's battery (in kilowatt-hours). \t|"
+			},
+			"response": []
+		},
+		{
+			"name": "EV Battery Level",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/battery",
+				"description": "__Description__\n\nRetrieve EV battery level of a vehicle.\n\n__Permission__\n\n`read_battery`\n\n__Response body__\n\n|  Name \t|Type   \t|Boolean   \t|\n|---\t|---\t|---\t|\n|  `percentRemaining`|   number|  An EV battery’s state of charge (in percent). \t|\n|   `range`|   number\t|   The estimated remaining distance the vehicle can travel (in kilometers by default or in miles using the [sc-unit-system](https://smartcar.com/docs/api?version=v2.0&language=cURL#request-headers).\t|"
+			},
+			"response": []
+		},
+		{
+			"name": "EV Charge Limit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/charge/limit"
+			},
+			"response": []
+		},
+		{
+			"name": "EV Charge Limit",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/charge/limit"
+			},
+			"response": []
+		},
+		{
+			"name": "EV Charge Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/charge",
+				"description": "__Description__\n\nReturns the current charge status of an electric vehicle.\n\n__Permission__\n\n`read_charge`\n\n__Response body__\n\n|  Name \t|Type   \t|Boolean   \t|\n|---\t|---\t|---\t|\n|  `isPluggedIn` \t|   boolean\t|  Indicates whether a charging cable is currently plugged into the vehicle’s charge port. \t|\n|   `state`\t|   string\t|   Indicates whether the vehicle is currently charging. Options: `CHARGING` `FULLY_CHARGED` `NOT_CHARGING`\t|"
+			},
+			"response": []
+		},
+		{
+			"name": "Control Charge",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"action\" : {{control_charge_action}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/charge"
+			},
+			"response": []
+		},
+		{
+			"name": "Location",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/location",
+				"description": "__Description__\n\nRetrieve latitude and longitude of a vehicle.\n\n__Permission__\n\n`read_location`\n\n__Response Body__\n\n|Name| Type|Desciprtion|\n|--|--|--|\n|`latitude`|number|The latitude (in degrees).|\n|`longitude`|number|The longitude (in degrees).|"
+			},
+			"response": []
+		},
+		{
+			"name": "Lock Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/security"
+			},
+			"response": []
+		},
+		{
+			"name": "Lock Vehicle",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"action\": \"LOCK\"\n}"
+				},
+				"url": "https://api.smartcar.com/v1.0/vehicles/{{vehicle_id}}/security",
+				"description": "__Description__\n\nLock the vehicle\n\n__Permission__\n\n`control_security`\n\n__Response body__\n\n|  Name \t|Type   \t|Boolean   \t|\n|---\t|---\t|---\t|\n|  status|   string|  If the request is successful, Smartcar will return “success” (HTTP 200 status).|"
+			},
+			"response": []
+		},
+		{
+			"name": "Unlock Vehicle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"action\": \"UNLOCK\"\n}"
+				},
+				"url": "https://api.smartcar.com/v1.0/vehicles/{{vehicle_id}}/security",
+				"description": "__Description__\n\nUnlock the vehicle\n\n__Permission__\n\n`control_security`\n\n__Response body__\n\n|  Name \t|Type   \t|Boolean   \t|\n|---\t|---\t|---\t|\n|  status|   string|  If the request is successful, Smartcar will return “success” (HTTP 200 status).|"
+			},
+			"response": []
+		},
+		{
+			"name": "Odometer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/odometer",
+				"description": "__Description__\n\nReturns the vehicle’s last known odometer reading.\n\n__Permission__\n\n`read_odometer`\n\n__Response Body__\n\n|Name| Type|Desciprtion|\n|--|--|--|\n|`distance`|number|The current odometer of the vehicle (in kilometers by default or in miles using the [sc-unit-system](https://smartcar.com/docs/api?version=v2.0&language=cURL#request-headers)).|"
+			},
+			"response": []
+		},
+		{
+			"name": "Engine Oil Life",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/engine/oil",
+				"description": "__Description__\n\nReturns the remaining life span of a vehicle’s engine oil.\n\n__Permission__\n\n`read_engine_oil`\n\n__Response body__\n\n|  Name \t|Type   \t|Boolean   \t|\n|---\t|---\t|---\t|\n|  `lifeRemaining`|   number|  The engine oil’s remaining life span (as a percentage). Oil life is based on the current quality of the oil. (in percent).|"
+			},
+			"response": []
+		},
+		{
+			"name": "Send Destination",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/navigation/destination"
+			},
+			"response": []
+		},
+		{
+			"name": "Service History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/service/history"
+			},
+			"response": []
+		},
+		{
+			"name": "Fuel Tank",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/fuel",
+				"description": "__Description__\n\nReturns the status of the fuel remaining in the vehicle’s gas tank. Note: The fuel tank API is only available for vehicles sold in the United States.\n\n__Permission__\n\n`read_fuel`\n\n__Response Body__\n\n|Name| Type|Desciprtion|\n|--|--|--|\n|`range`|number|The estimated remaining distance the car can travel (in kilometers by default or in miles using the [sc-unit-system](https://smartcar.com/docs/api?version=v2.0&language=cURL#request-headers)).|\n|`percentRemaining`|number|The remaining level of fuel in the tank (in percent).|\n|`amountRemaining`|number|The amount of fuel in the tank (in liters by default or in gallons (U.S.) using the [sc-unit-system](https://smartcar.com/docs/api?version=v2.0&language=cURL#request-headers)).|"
+			},
+			"response": []
+		},
+		{
+			"name": "Tire pressure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/tires/pressure",
+				"description": "__Description__\n\nReturns the air pressure of each of the vehicle’s tires.\n__Permission__\n\n`read_tires`\n\n__Example Response__\n\n|Name| Type|Description|\n|--|--|--|\n|`frontLeft`|number|The current air pressure of the front left tire (in kilopascals by default or in pounds per square inch using the [sc-unit-system](https://smartcar.com/docs/api?version=v2.0&language=cURL#request-headers)).|\n|`frontRight`|number|The current air pressure of the front right tire (in kilopascals by default or in pounds per square inch using the [sc-unit-system](https://smartcar.com/docs/api?version=v2.0&language=cURL#request-headers)).|\n|`backLeft`|number|The current air pressure of the back left tire (in kilopascals by default or in pounds per square inch using the [sc-unit-system](https://smartcar.com/docs/api?version=v2.0&language=cURL#request-headers)).|\n|`backRight`|number|The current air pressure of the back right tire (in kilopascals by default or in pounds per square inch using the [sc-unit-system](https://smartcar.com/docs/api?version=v2.0&language=cURL#request-headers)).|"
+			},
+			"response": []
+		},
+		{
+			"name": "User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/user",
+				"description": "__Description__\n\nReturns a paged list of all vehicles connected to the application for the current authorized user.\n\n__Query Parameters__\n\n|Parameter| Type|Required|Description|\n|--|--|--|--|\n|`limit`|integer|false|Number of vehicles to return (default: 10).|\n|`offset`|integer|false|A vehicle ID (UUID v4).|Index to start vehicle list at|\n\n__Response Body__\n\n|Name| Type|Desciprtion|\n|--|--|--|\n|`vehicles`|array|An array of vehicle IDs.|\n|`vehicles.[]`|string|A vehicle ID (UUID v4).|\n|`paging`|object|Metadata about the current list of elements.|\n|`paging.count`|integer|The total number of elements for the entire query (not just the given page).|\n|`paging.offset`|integer|The current start index of the returned list of elements.|"
+			},
+			"response": []
+		},
+		{
+			"name": "Vehicle Attributes",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}",
+				"description": "__Permission__\n\nReturns a single vehicle object, containing identifying information.\n\n__Permission__\n\n`read_vehicle_info`\n\n__Response Body__\n\n|Name| Type|Description|\n|--|--|--|\n|`id`|string|A vehicle ID (UUID v4).|\n|`make`|string|The manufacturer of the vehicle.|\n|`model`|integer|The model of the vehicle.|\n|`year`|integer|The model year.|"
+			},
+			"response": []
+		},
+		{
+			"name": "VIN",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/vin"
+			},
+			"response": []
+		},
+		{
+			"name": "Compatibility",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic base64({client_id}:{client_secret})",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.smartcar.com/v2.0/compatibility?vin={vin}&scope={scope}&country={country}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"smartcar",
+						"com"
+					],
+					"path": [
+						"v2.0",
+						"compatibility"
+					],
+					"query": [
+						{
+							"key": "vin",
+							"value": "{vin}"
+						},
+						{
+							"key": "scope",
+							"value": "{scope}"
+						},
+						{
+							"key": "country",
+							"value": "{country}"
+						}
+					]
+				},
+				"description": "In the US, compatibility will return a breakdown by scope of what a car is capable of. In Europe, the check is based on the make of the car so will return only a `true` or `false`\n\nThe Compatibility API lets developers determine whether a given vehicle is compatible with Smartcar and whether it is capable of the features their application requires. Using this endpoint, developers can determine whether specific vehicles are eligible before sending a user through Smartcar Connect.\n\nA compatible vehicle is one that:\n1. Has the hardware required for internet connectivity\n2. Belongs to the makes and models Smartcar is compatible with in the vehicle's country\n\nA vehicle is capable of given feature if:\n1. The vehicle supports the feature (e.g., a Ford Escape supports /fuel but a Mustang Mach-e does not)\n2. Smartcar supports the feature for the vehicle's make\n\nNote: The Compatibility API is currently available for vehicles sold in the United States. For other countries, please contact us to request early access. Our initial release for vehicles sold outside of the United States only supports checking compatibility. It does not yet support checking `capabilities`.\n\n|  Name \t|Type   \t|Boolean   \t|\n|---\t|---\t|---\t|\n|  compatible|   boolean|  `true` if the vehicle is likely compatible.*, `false` otherwise.| \nreason|   string \\| null|  One of the enum values described below if compatible is `false`, `null` otherwise.|\n| capabilities|   array| An array containing the set of endpoints that the provided scope value can provide authorization for. This array will be empty if `compatible` is false|\n| capabilities[].permission|   string|One of the permissions provided in the scope parameter.|\n| capabilities[].endpoint|   string| One of the endpoints that the permission authorizes access to.|\n| capabilities[].capable|   boolean|`true` if the vehicle is likely capable of this feature.*, `false` otherwise.|\n| capabilities[].reason|   string \\| null|One of the enum values described below if capable is `false`, `null` otherwise.|\n\n__Note__: The compatibility of a vehicle depends on many factors including its make, model, model year, trim, package, and head unit. The Smartcar Compatibility API is optimized to return false positives rather than false negatives.\n\n__Enum Values__\n\n|  Parameter \t|Value   \t|Description   \t|\n|---\t|---\t|---\t|\n|  reason|   VEHICLE_NOT_COMPATIBLE|  The vehicle does not have the hardware required for internet connectivity.|\n|  |   MAKE_NOT_COMPATIBLE|  Smartcar is not yet compatible with the vehicle's make in the specified country.|\n|  capabilities[].reason|   VEHICLE_NOT_CAPABLE|  TThe vehicle does not support this feature.|\n|  |   SMARTCAR_NOT_CAPABLE|  Smartcar is not capable of supporting the given feature on the vehicle's make.|"
+			},
+			"response": []
+		},
+		{
+			"name": "Subscribe",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/84296c69-4a60-4d44-9064-2fa69d30ad8a/webhooks/e3234769-9dc2-4f10-814c-4f54e6dfc643",
+				"description": "__Description__\n\nReturns the current charge status of an electric vehicle.\n\n__Permission__\n\n`read_charge`\n\n__Response body__\n\n|  Name \t|Type   \t|Boolean   \t|\n|---\t|---\t|---\t|\n|  `isPluggedIn` \t|   boolean\t|  Indicates whether a charging cable is currently plugged into the vehicle’s charge port. \t|\n|   `state`\t|   string\t|   Indicates whether the vehicle is currently charging. Options: `CHARGING` `FULLY_CHARGED` `NOT_CHARGING`\t|"
+			},
+			"response": []
+		},
+		{
+			"name": "Unsubscribe",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "https://api.smartcar.com/v2.0/vehicles/{{vehicle_id}}/webhooks/{{webhook_id}}",
+				"description": "__Description__\n\nReturns the current charge status of an electric vehicle.\n\n__Permission__\n\n`read_charge`\n\n__Response body__\n\n|  Name \t|Type   \t|Boolean   \t|\n|---\t|---\t|---\t|\n|  `isPluggedIn` \t|   boolean\t|  Indicates whether a charging cable is currently plugged into the vehicle’s charge port. \t|\n|   `state`\t|   string\t|   Indicates whether the vehicle is currently charging. Options: `CHARGING` `FULLY_CHARGED` `NOT_CHARGING`\t|"
+			},
+			"response": []
+		},
+		{
+			"name": "https://auth.smartcar.com/oauth/token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "{{vault:authorization-password}}",
+						"username": "725146a3-69f4-46c8-965d-54b3b6f81eb7"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "code",
+							"value": "1961afb9-dea9-4a59-ade3-9edfd2ac0258",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://webhook.site/chargepointesterror",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://auth.smartcar.com/oauth/token",
+					"protocol": "https",
+					"host": [
+						"auth",
+						"smartcar",
+						"com"
+					],
+					"path": [
+						"oauth",
+						"token"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "e24586dc-a797-466a-9c61-289009e304b3",
+							"disabled": true
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"disabled": true
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://webhook.site/chargepointesterror",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": {
+			"headerPrefix": "Basic",
+			"clientId": "{{vault:authorization-secret}}",
+			"clientSecret": "{{vault:authorization-secret}}",
+			"accessTokenUrl": "https://auth.smartcar.com/oauth/token",
+			"authUrl": "https://connect.smartcar.com/oauth/authorize?approval_prompt=force&mode=test",
+			"scope": "read_vin read_vehicle_info read_location read_engine_oil read_battery read_charge read_fuel control_security read_odometer read_tires read_charge",
+			"state": "",
+			"addTokenTo": "header"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "vehicle_id",
+			"value": ""
+		},
+		{
+			"key": "make",
+			"value": ""
+		},
+		{
+			"key": "webhook_id",
+			"value": ""
+		},
+		{
+			"key": "control_charge_action",
+			"value": "START"
+		},
+		{
+			"key": "Application Management Token",
+			"value": "Application Management Token"
+		}
+	]
+}
