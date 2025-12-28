@@ -6,6 +6,8 @@ import pinoHttp from 'pino-http';
 import { apiKeyMiddleware } from './middleware/apiKey.middleware';
 import { errorHandler } from './middleware/errorHandler.middleware';
 import { telemetryRouter } from './controllers/telemetry.controller';
+import { insightsRouter } from './controllers/insights.controller';
+import { simulationRouter } from './controllers/simulation.controller';
 
 export const createApp = (): Application => {
   const app = express();
@@ -43,6 +45,8 @@ export const createApp = (): Application => {
   const apiRouter = Router();
   apiRouter.use(apiKeyMiddleware);
   apiRouter.use('/telemetry', telemetryRouter);
+  apiRouter.use('/vehicles', insightsRouter);
+  apiRouter.use('/simulate', simulationRouter);
 
   app.use('/api/v1', apiRouter);
 

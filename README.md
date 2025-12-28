@@ -21,6 +21,18 @@ This repository hosts a TypeScript + Express service that ingests EV telemetry, 
 3. Generate build artifacts: `npm run build`
 4. Start the service in development mode: `npm run dev`
 
+## Configuration
+
+Environment variables (load via `.env`):
+
+| Variable | Description | Default |
+| -------- | ----------- | ------- |
+| `PORT` | Port used by the HTTP server. | `3000` |
+| `API_KEY` | API key expected in `x-api-key` header for all `/api/v1` routes. | `demo-api-key` |
+| `DATABASE_PATH` | SQLite database location. | `./data/battery.sqlite` |
+| `LOG_LEVEL` | Pino log level. | `info` |
+| `SIMULATION_DEFAULT_VEHICLE_ID` | Vehicle id fallback used by simulation runs. | `simulated-vehicle` |
+
 ## npm Scripts
 
 | Script                 | Description                                      |
@@ -34,6 +46,45 @@ This repository hosts a TypeScript + Express service that ingests EV telemetry, 
 | `npm run format:write` | Apply Prettier formatting to supported files.    |
 | `npm run clean`        | Remove compiled output in `dist/`.               |
 | `npm run db:migrate`   | Apply pending SQLite migrations.                 |
+| `npm run simulate`     | Run a simulation scenario via `scripts/simulate.ts`. |
+
+## API Overview
+
+| Method | Path | Description |
+| ------ | ---- | ----------- |
+| `POST` | `/api/v1/telemetry` | Ingest telemetry, score vehicle health, and persist history. |
+| `GET` | `/api/v1/vehicles/{vehicleId}/insights` | Retrieve latest score, alerts, and tips for a vehicle. |
+| `GET` | `/api/v1/simulate/scenarios` | List deterministic simulation scenarios. |
+| `POST` | `/api/v1/simulate/drive` | Execute a simulated drive; optionally persist telemetry. |
+
+### Example Requests
+
+```bash
+# Telemetry ingestion
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: ${API_KEY}" \
+  http://localhost:3000/api/v1/telemetry \
+  -d '{
+    "vehicleId": "demo-vehicle",
+    "timestamp": "2024-01-01T08:00:00.000Z",
+    "batteryPercentage": 82,
+    "speedKmph": 22,
+    "engineOn": true,
+    "charging": false
+  }'
+
+# Insights lookup
+curl -H "x-api-key: ${API_KEY}" \
+  http://localhost:3000/api/v1/vehicles/demo-vehicle/insights
+
+# Simulation run without persistence
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: ${API_KEY}" \
+  http://localhost:3000/api/v1/simulate/drive \
+  -d '{ "scenario": "urban", "persist": false }'
+```
 
 ## Database Operations
 

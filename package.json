@@ -19,7 +19,8 @@
     "format": "prettier --check \"**/*.{ts,js,json,md}\"",
     "format:write": "prettier --write \"**/*.{ts,js,json,md}\"",
     "clean": "rimraf dist",
-    "db:migrate": "ts-node ./src/db/migrate.ts"
+    "db:migrate": "ts-node ./src/db/migrate.ts",
+    "simulate": "ts-node ./scripts/simulate.ts"
   },
   "dependencies": {
     "dotenv-flow": "^4.1.0",

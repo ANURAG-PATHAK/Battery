@@ -13,7 +13,7 @@ telemetryRouter.post(
   async (req, res, next) => {
     try {
       const { validatedBody } = req as ValidatedRequest<NormalizedTelemetry>;
-      const result = await recordTelemetry({ telemetry: validatedBody });
+      const result = await recordTelemetry(validatedBody);
 
       logger.info(
         {
